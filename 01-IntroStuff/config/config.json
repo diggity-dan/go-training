@@ -2,6 +2,6 @@
 {
 "url": "127.0.0.1",
 "port": 80,
-"dburl": "mongodb://127.0.0.1/golang",
+"dburl": "mongodb://127.0.0.1:23703/golang",
 "dbname": "golang"
 }
