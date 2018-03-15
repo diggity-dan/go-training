@@ -4,36 +4,58 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"os/exec"
 )
 
-type configuration struct {
-	url    string `json: "url"`
-	port   int    `json: "port"`
-	dburl  string `json: "dburl"`
-	dbname string `json: "dbmame"`
+//Configuration Exported configuration struct
+type Configuration struct {
+	Database struct {
+		URL  string `json:"url"`
+		Name string `json:"name"`
+	} `json:"database"`
+	Application struct {
+		Name string `json:"name"`
+		URL  string `json:"url"`
+		Port int    `json:"port"`
+	} `json:"application"`
 }
 
-//create a new global config:
-var config configuration
+//Errorcheck Exported DRY error checker
+func Errorcheck(e error) {
+	if e != nil {
+		fmt.Println("ERROR!", e)
+		panic(e)
+	}
+}
 
-func main() {
-
-	//get the configuration file from disk:
-	file, err := os.Open("./config/config.json")
+//LoadConfiguration Exported JSON configuration loader
+func LoadConfiguration(filename string) (Configuration, error) {
+	var config Configuration
+	file, err := os.Open(filename)
 	defer file.Close()
 
 	if err != nil {
-		fmt.Println(err)
+		return config, err
 	}
 
-	decoder := json.NewDecoder(file)
+	jsonparser := json.NewDecoder(file)
+	err = jsonparser.Decode(&config)
 
-	err = decoder.Decode(&config)
+	return config, err
+}
 
-	if err != nil {
-		fmt.Println(err)
-	}
+func main() {
 
-	fmt.Println(config.port)
+	fmt.Println("AppLoading...")
+
+	config, err := LoadConfiguration("./config/config.json")
+	Errorcheck(err)
+
+	fmt.Println("Application Name: ", config.Application.Name)
+
+	cmd := exec.Command("powershell.exe", `./scripts/hello-world.ps1 -someArg "jelly"`)
+	out, err := cmd.CombinedOutput()
+
+	fmt.Print(string(out))
 
 }
