@@ -1,7 +1,12 @@
 
 {
-"url": "127.0.0.1",
-"port": 80,
-"dburl": "mongodb://127.0.0.1:23703/golang",
-"dbname": "golang"
+    "database": {
+        "url": "mongodb://127.0.0.1:23703",
+        "name": "golang"
+    },
+    "application":{
+        "name": "GoLang-Intro",
+        "url": "https://localhost/golang/intro",
+        "port": 443
+    }
 }
