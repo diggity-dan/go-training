@@ -8,5 +8,9 @@
         "name": "GoLang-Intro",
         "url": "https://localhost/golang/intro",
         "port": 443
+    },
+    "logging":{
+        "dir": "./logs",
+        "filename": "golang-intro.log"
     }
 }

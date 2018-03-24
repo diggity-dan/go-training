@@ -7,6 +7,26 @@ import (
 	"os/exec"
 )
 
+//doesn't seem to matter if func, variable, type definitions are before or after
+//the main() func. This looks similar to hoisting in javascript.
+//even moving the Configuration type declaration below the LoadConfiguration() func still works.
+
+func main() {
+
+	fmt.Println("AppLoading...")
+
+	config, err := LoadConfiguration("./config/config.json")
+	Errorcheck(err)
+
+	fmt.Println("Application Name: ", config.Application.Name)
+	fmt.Println("Logging Dir: ", config.Logging.Dir)
+
+	cmd := exec.Command("powershell.exe", `./scripts/hello-world.ps1 -someArg "jelly"`)
+	out, err := cmd.CombinedOutput()
+
+	fmt.Print(string(out))
+}
+
 //Configuration Exported configuration struct
 type Configuration struct {
 	Database struct {
@@ -18,6 +38,10 @@ type Configuration struct {
 		URL  string `json:"url"`
 		Port int    `json:"port"`
 	} `json:"application"`
+	Logging struct {
+		Dir      string `json:"dir"`
+		Filename string `json:"filename"`
+	} `json:"logging"`
 }
 
 //Errorcheck Exported DRY error checker
@@ -42,20 +66,4 @@ func LoadConfiguration(filename string) (Configuration, error) {
 	err = jsonparser.Decode(&config)
 
 	return config, err
-}
-
-func main() {
-
-	fmt.Println("AppLoading...")
-
-	config, err := LoadConfiguration("./config/config.json")
-	Errorcheck(err)
-
-	fmt.Println("Application Name: ", config.Application.Name)
-
-	cmd := exec.Command("powershell.exe", `./scripts/hello-world.ps1 -someArg "jelly"`)
-	out, err := cmd.CombinedOutput()
-
-	fmt.Print(string(out))
-
 }
