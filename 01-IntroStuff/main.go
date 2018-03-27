@@ -23,6 +23,7 @@ func main() {
 
 	cmd := exec.Command("powershell.exe", `./scripts/hello-world.ps1 -someArg "jelly"`)
 	out, err := cmd.CombinedOutput()
+	Errorcheck(err)
 
 	fmt.Print(string(out))
 }
